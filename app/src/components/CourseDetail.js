@@ -5,6 +5,7 @@ export default class CourseDetail extends Component {
 
   state = {
     courses: [],
+    currentCourse: "",
   };
 
   componentDidMount() {
@@ -19,7 +20,7 @@ export default class CourseDetail extends Component {
               <div className="grid-100">
                 <span>
                   <Link className="button" to={this.props.match.url}>Update Course</Link>
-                  <Link className="button" to={this.props.match.url}>Delete Course</Link>
+                  <Link className="button" onClick={this.deleteCourse} to={''}>Delete Course</Link>
                 </span>
                 <Link className="button button-secondary" to="/courses">Return to List</Link>
 
@@ -41,7 +42,7 @@ export default class CourseDetail extends Component {
                           ? course.description.split('\n')
                               .map(paragraph =>
                                   (paragraph.length > 0)
-                                      ? <p>{paragraph}</p>
+                                      ? <p key={paragraph}>{paragraph}</p>
                                       : '')
                           : ''
                       }
@@ -91,4 +92,30 @@ export default class CourseDetail extends Component {
     }
   };
 
+  deleteCourse = async () => {
+    //TODO: encrypt password before storing/sending
+    const {id} = this.props.match.params;
+    const {context} = this.props;
+    const {emailAddress} = context.authenticatedUser;
+    const {userPassword} = context;
+    const {history} = this.props;
+
+    let credentials = {
+      emailAddress: emailAddress,
+      password: userPassword,
+    };
+    console.log(credentials);
+
+    const url = `/courses/${id}`;
+    const response = await context.data.api(url, 'DELETE', null, true, {credentials});
+    if (response.status === 204) {
+      history.push('/courses');
+    } else if (response.status === 403) {
+      history.push('/forbidden');
+    } else if (response.status === 500) {
+      history.push('/error');
+    } else {
+      throw new Error();
+    }
+  }
 }
