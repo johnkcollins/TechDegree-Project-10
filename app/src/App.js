@@ -1,26 +1,49 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch
+} from 'react-router-dom';
 
-function App() {
-  return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo"/>
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-              className="App-link"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+import Header from './components/Header';
+import Courses from './components/Courses';
+import NotFound from './components/NotFound';
+import UserSignUp from './components/UserSignUp';
+import UserSignIn from './components/UserSignIn';
+import UserSignOut from './components/UserSignOut';
+import Authenticated from './components/Authenticated';
+import CourseDetail from './components/CourseDetail';
+import CreateCourse from './components/CreateCourse';
+
+
+import withContext from './Context';
+import PrivateRoute from './PrivateRoute';
+
+const HeaderWithContext = withContext(Header);
+const CoursesWithContext = withContext(Courses);
+const AuthWithContext = withContext(Authenticated);
+const UserSignUpWithContext = withContext(UserSignUp);
+const UserSignInWithContext = withContext(UserSignIn);
+const UserSignOutWithContext = withContext(UserSignOut);
+const CourseDetailWithContext = withContext(CourseDetail);
+const CreateCourseWithContext = withContext(CreateCourse);
+
+export default () => (
+    <Router>
+      <div>
+        <HeaderWithContext/>
+
+        <Switch>
+          <Route exact path="/" component={CoursesWithContext}/>
+          <PrivateRoute path="/authenticated" component={AuthWithContext}/>
+          <Route path="/signin" component={UserSignInWithContext}/>
+          <Route path="/signup" component={UserSignUpWithContext}/>
+          <Route path="/signout" component={UserSignOutWithContext}/>
+          <Route exact path="/courses" component={CoursesWithContext}/>
+          <Route path="/courses/:id" component={CourseDetailWithContext}/>
+          <Route path="/courses/new" component={CreateCourseWithContext}/>
+          <Route component={NotFound}/>
+        </Switch>
       </div>
-  );
-}
-
-export default App;
+    </Router>
+);
