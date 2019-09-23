@@ -103,13 +103,7 @@ export default class Courses extends Component {
                           </div>
                         </div>
                       </div>
-                      <div className="grid-100 pad-bottom">
-                        <button className="button" type="button" onSubmit={this.submit}></button>
-                        <button className="button button-secondary" type="button"
-                                onClick='event.preventDefault(); location.href="/"'>Cancel
-                        </button>
                       </div>
-                    </div>
                 )}/>
 
           </div>
@@ -132,6 +126,7 @@ export default class Courses extends Component {
     const {context} = this.props;
 
     const {
+      authenticatedUser,
       courseTitle,
       description,
       estimatedTime,
@@ -140,6 +135,7 @@ export default class Courses extends Component {
     } = this.state;
 
     const course = {
+      authenticatedUser,
       courseTitle,
       description,
       estimatedTime,
@@ -148,12 +144,13 @@ export default class Courses extends Component {
     };
 
     if (errors.length < 1) {
-      context.data.createCourse(course)
+      context.data.createCourse(course, authenticatedUser)
           .then(errors => {
             if (errors.length) {
+              e.preventDefault();
               this.setState({errors})
             } else {
-              context.actions.createCourse(course)
+              context.actions.createCourse(course, authenticatedUser)
                   .then(this.props.history.push('/courses'));
             }
           })
