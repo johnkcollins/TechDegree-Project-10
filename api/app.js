@@ -59,7 +59,6 @@ const authenticateUser = async (req, res, next) => {
   let message = null;
   // Parse the user's credentials from the Authorization header.
   const credentials = auth(req);
-  console.log(credentials);
   users = await User.findAll();
   // If the user's credentials are available...
 
@@ -69,10 +68,12 @@ const authenticateUser = async (req, res, next) => {
     // from the Authorization header).
     const user = users.find(u => u.emailAddress === credentials.name);
     // If a user was successfully retrieved from the data store...
+
     if (user) {
       // Uses the bcryptjs npm package to compare the user's password
       // (from the Authorization header) to the user's password
       // that was retrieved from the data store.
+
       const authenticated = bcryptjs
           .compareSync(credentials.pass, user.password);
       // If the passwords match...
@@ -82,6 +83,7 @@ const authenticateUser = async (req, res, next) => {
         // will have access to the user's information.
         req.currentUser = user;
       } else {
+
         message = `Authentication failure for email: ${user.email}`;
       }
     } else {
@@ -94,7 +96,6 @@ const authenticateUser = async (req, res, next) => {
 // If user authentication failed...
   if (message) {
     console.warn(message);
-
     // Return a response with a 401 Unauthorized HTTP status code.
     res.status(401).json({message: 'Access Denied'});
   } else {
