@@ -16,11 +16,11 @@ export default class Data {
     }
 
     if (requiresAuth) {
-      const encodedCredentials = btoa(`${credentials.emailAddress}:${credentials.password}`);
+      const encodedCredentials = btoa(`${credentials.credentials.emailAddress}:${credentials.credentials.password}`);
       options.headers['Authorization'] = `Basic ${encodedCredentials}`;
+      console.log(options.method, options, encodedCredentials);
     }
 
-    console.log(options.method, options, credentials);
     return fetch(url, options);
   }
 

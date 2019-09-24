@@ -100,13 +100,13 @@ export default class CourseDetail extends Component {
     const {userPassword} = context;
     const {history} = this.props;
 
-    // let credentials = {
-    //   emailAddress: emailAddress,
-    //   password: userPassword,
-    // };
-
+    let credentials = {
+      emailAddress: emailAddress,
+      password: userPassword,
+    };
+    console.log(credentials);
     const url = `/courses/${id}`;
-    const response = await context.data.api(url, 'DELETE', null, true, {emailAddress, userPassword});
+    const response = await context.data.api(url, 'DELETE', null, true, {credentials});
     if (response.status === 204) {
       history.push('/courses');
     } else if (response.status === 403) {
