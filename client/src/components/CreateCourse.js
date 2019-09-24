@@ -9,10 +9,14 @@ export default class Courses extends Component {
     courseTitle: '',
     description: '',
     estimatedTime: '',
-    materialsNeeded: ''
+    materialsNeeded: '',
+    credentials: '',
   };
 
   render() {
+    const {context} = this.props;
+    const {authenticatedUser} = context;
+
     const {
       errors,
       courseTitle,
@@ -21,21 +25,11 @@ export default class Courses extends Component {
       materialsNeeded,
     } = this.state;
 
-    const {authenticatedUser} = this.props.context;
-
     return (
 
         <div className="bounds course--detail">
           <h1>Create Course</h1>
           <div>
-            <div>
-              {errors.length > 0
-                  ? <h2 className="validation--errors--label">Validation Errors</h2> : ''}
-              <p>
-                {errors.length > 0
-                    ? errors.map(error => <ul key={error}>error</ul>) : ''}
-              </p>
-            </div>
             <Form
                 cancel={this.cancel}
                 errors={errors}
@@ -103,7 +97,7 @@ export default class Courses extends Component {
                           </div>
                         </div>
                       </div>
-                      </div>
+                    </div>
                 )}/>
 
           </div>
@@ -122,45 +116,37 @@ export default class Courses extends Component {
     });
   };
 
-  submit = (e) => {
+  submit = () => {
     const {context} = this.props;
+    const {authenticatedUser} = context;
+    const {emailAddress} = authenticatedUser;
+    const password = context.userPassword;
+    const userId = this.props.context.authenticatedUser.id;
 
     const {
-      authenticatedUser,
+      errors,
       courseTitle,
       description,
       estimatedTime,
       materialsNeeded,
-      errors
+
     } = this.state;
 
     const course = {
-      authenticatedUser,
-      courseTitle,
-      description,
+      title: courseTitle,
+      description: description,
       estimatedTime,
       materialsNeeded,
       errors
     };
 
-    if (errors.length < 1) {
-      context.data.createCourse(course, authenticatedUser)
-          .then(errors => {
-            if (errors.length) {
-              e.preventDefault();
-              this.setState({errors})
-            } else {
-              context.actions.createCourse(course, authenticatedUser)
-                  .then(this.props.history.push('/courses'));
-            }
+    const response = context.data.createCourse(course, {emailAddress, password, userId});
+    if (response)
+      response.then(data =>
+          this.setState({
+            errors: data
           })
-          .catch(err => {
-            console.log(err);
-            this.props.history.push('/error');
-          });
-    } else {
-      e.preventDefault();
-    }
+      );
   };
 
   cancel = () => {
