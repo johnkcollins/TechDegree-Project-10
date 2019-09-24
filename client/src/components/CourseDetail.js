@@ -104,7 +104,6 @@ export default class CourseDetail extends Component {
       emailAddress: emailAddress,
       password: userPassword,
     };
-    console.log(credentials);
     const url = `/courses/${id}`;
     const response = await context.data.api(url, 'DELETE', null, true, {credentials});
     if (response.status === 204) {
@@ -116,5 +115,5 @@ export default class CourseDetail extends Component {
     } else {
       throw new Error();
     }
-  }
+  };
 }
