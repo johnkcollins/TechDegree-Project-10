@@ -24,9 +24,19 @@ export default class UserSignUp extends Component {
         <div className="bounds">
           <div className="grid-33 centered signin">
             <h1>Sign Up</h1>
+            {errors
+                ?
+                <ul className="validation--errors--label">
+                  {
+                    errors
+                        ? errors.map(error => <li key={error}>{error}</li>)
+                        : ''
+                  }
+                </ul>
+                : ''
+            }
             <Form
                 cancel={this.cancel}
-                errors={errors}
                 submit={this.submit}
                 submitButtonText="Sign Up"
                 elements={() => (
@@ -99,12 +109,11 @@ export default class UserSignUp extends Component {
 
     context.data.createUser(user)
         .then(errors => {
-          if (errors.length) {
+          if (errors.length > 0) {
             this.setState({errors})
           } else {
-            console.log(context);
             context.actions.signIn(emailAddress, password)
-                .then(this.props.history.push('/authenticated'));
+                .then(this.props.history.push('/courses'))
           }
         })
         .catch(err => {
