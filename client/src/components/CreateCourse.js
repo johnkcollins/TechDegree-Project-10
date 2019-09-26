@@ -9,8 +9,7 @@ export default class Courses extends Component {
     courseTitle: '',
     description: '',
     estimatedTime: '',
-    materialsNeeded: '',
-    credentials: '',
+    materialsNeeded: ''
   };
 
   render() {
@@ -30,9 +29,19 @@ export default class Courses extends Component {
         <div className="bounds course--detail">
           <h1>Create Course</h1>
           <div>
+            {errors
+                ?
+                <ul className="validation--errors--label">
+                  {
+                    errors
+                        ? errors.map(error => <li key={error}>{error}</li>)
+                        : ''
+                  }
+                </ul>
+                : ''
+            }
             <Form
                 cancel={this.cancel}
-                errors={errors}
                 submit={this.submit}
                 submitButtonText="Create Course"
                 elements={() => (
@@ -116,7 +125,7 @@ export default class Courses extends Component {
     });
   };
 
-  submit = () => {
+  submit = async () => {
     const {context} = this.props;
     const {authenticatedUser} = context;
     const {emailAddress} = authenticatedUser;
@@ -140,13 +149,17 @@ export default class Courses extends Component {
       errors
     };
 
-    const response = context.data.createCourse(course, {emailAddress, password, userId});
-    if (response)
+    const response = await context.data.createCourse(course, {emailAddress, password, userId});
+    if (response) {
       response.then(data =>
           this.setState({
             errors: data
           })
-      );
+      )
+    } else {
+      this.props.history.push("/courses");
+    }
+
   };
 
   cancel = () => {
