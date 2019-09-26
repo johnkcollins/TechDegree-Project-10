@@ -306,7 +306,6 @@ app.delete('/api/courses/:id', authenticateUser,
             res.status(400).json({errors: errorMessages});
           } else {
             let courses = await sequelize.query(`SELECT courses.id, title, description, estimatedTime, materialsNeeded, userId, firstName, lastName, emailAddress, password FROM courses INNER JOIN users ON Courses.userId = Users.Id WHERE Courses.userId IS ${user.id} AND Courses.id IS ${req.params.id}`, {type: sequelize.QueryTypes.SELECT});
-            console.log(courses);
             if (courses.length > 0) {
               let id = req.params.id;
               Course.destroy({where: {id}});
