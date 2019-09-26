@@ -3,24 +3,32 @@ import {Link} from "react-router-dom";
 
 export default class CourseDetail extends Component {
 
+
   state = {
     courses: [],
-    currentCourse: "",
   };
 
-  componentDidMount() {
-    this.getCourses();
+  async componentDidMount() {
+    await this.getCourses();
+    console.log(this);
   }
 
   render() {
+    const {context} = this.props;
+    const {authenticatedUser} = context;
+
     return (
         <div>
           <div className="actions--bar">
             <div className="bounds">
               <div className="grid-100">
                 <span>
-                  <Link className="button" to={this.props.match.url}>Update Course</Link>
-                  <Link className="button" onClick={this.deleteCourse} to={''}>Delete Course</Link>
+                  {(authenticatedUser)
+                      ? <React.Fragment><Link className="button" to='' onClick={this.updateCourse}>Update Course</Link>
+                        < Link className="button" onClick={this.deleteCourse} to={''}>Delete
+                          Course</Link></React.Fragment>
+                      : ''
+                  }
                 </span>
                 <Link className="button button-secondary" to="/courses">Return to List</Link>
 
@@ -84,7 +92,9 @@ export default class CourseDetail extends Component {
     const url = `/courses/${id}`;
     const response = await this.props.context.data.api(url);
     if (response.status === 200) {
-      response.json().then(data => this.setState({courses: data}))
+      await response.json().then(data => this.setState({
+        courses: data
+      }));
     } else if (response.status === 500) {
       this.props.history.push('/error');
     } else {
@@ -92,28 +102,38 @@ export default class CourseDetail extends Component {
     }
   };
 
+  updateCourse = async () => {
+    const {context} = this.props;
+    const {id} = this.props.match.params;
+    const url = `/courses/${id}`;
+    const course = this.state.courses;
+    const response = await context.data.api(url);
+    this.props.history.push(`/courses/update`, course[0]);
+  };
+
   deleteCourse = async () => {
-    //TODO: encrypt password before storing/sending
     const {id} = this.props.match.params;
     const {context} = this.props;
-    const {emailAddress} = context.authenticatedUser;
-    const {userPassword} = context;
+    const {authenticatedUser} = context;
     const {history} = this.props;
-
+    const {emailAddress} = authenticatedUser;
+    const {userPassword} = context;
     let credentials = {
       emailAddress: emailAddress,
       password: userPassword,
     };
     const url = `/courses/${id}`;
     const response = await context.data.api(url, 'DELETE', null, true, {credentials});
-    if (response.status === 204) {
-      history.push('/courses');
-    } else if (response.status === 403) {
+
+    if (response.status === 403) {
       history.push('/forbidden');
     } else if (response.status === 500) {
       history.push('/error');
+    } else if (response.status === 204) {
+      console.log(this);
+      // history.push('/courses');
     } else {
       throw new Error();
     }
-  };
+  }
 }
