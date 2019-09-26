@@ -809,8 +809,8 @@ input:focus {
 
 /* styles the validation errors */
 .validation--errors--label {
-    color: #7c689b;
-    font-size: 28px;
+    color: #9b2119;
+    font-size: 16px;
 }
 
 .validation-errors ul {
