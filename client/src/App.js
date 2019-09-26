@@ -18,6 +18,7 @@ import Forbidden from "./components/Forbidden";
 
 import withContext from './Context';
 import PrivateRoute from './PrivateRoute';
+import UpdateCourse from "./components/UpdateCourse";
 
 
 const HeaderWithContext = withContext(Header);
@@ -28,6 +29,7 @@ const UserSignInWithContext = withContext(UserSignIn);
 const UserSignOutWithContext = withContext(UserSignOut);
 const CourseDetailWithContext = withContext(CourseDetail);
 const CreateCourseWithContext = withContext(CreateCourse);
+const UpdateCourseWithContext = withContext(UpdateCourse);
 const ForbiddenWithContext = withContext(Forbidden);
 
 export default () => (
@@ -39,7 +41,7 @@ export default () => (
           <Route exact path="/" component={CoursesWithContext}/>
           <Route exact path="/courses" component={CoursesWithContext}/>
           <PrivateRoute path="/courses/new" component={CreateCourseWithContext}/>
-
+          <PrivateRoute path="/courses/update" component={UpdateCourseWithContext}/>
           <Route path="/courses/:id" component={CourseDetailWithContext}/>
           <Route path="/signin" component={UserSignInWithContext}/>
           <Route path="/signup" component={UserSignUpWithContext}/>
