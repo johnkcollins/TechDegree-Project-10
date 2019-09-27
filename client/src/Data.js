@@ -1,5 +1,6 @@
 import config from './config';
 
+
 export default class Data {
 
   //Dynamically requests data from the API
@@ -117,12 +118,12 @@ export default class Data {
   }
 
   //Deletes the current course on the API
-  async deleteCourse(id, emailAddress, password, context, data) {
+  async deleteCourse(id, emailAddress, password) {
     const response = await this.api(`/courses/${id}`, 'DELETE', null, true, {credentials: {emailAddress, password}});
     if (response.status === 204) {
-      return console.log('Course deleted') && response;
+      console.log('Course Deleted');
+      return response;
     } else if (response.status === 403) {
-      console.log(response);
       return response.json().then(data => {
         return data.errors;
       });
