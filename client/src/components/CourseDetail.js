@@ -98,7 +98,7 @@ export default class CourseDetail extends Component {
     const url = `/courses/${id}`;
     const course = this.state.courses;
     const response = await context.data.api(url);
-    this.props.history.push(`/courses/update`, course[0]);
+    this.props.history.push(`${url}/update`, course[0]);
   };
 
   deleteCourse = async () => {
