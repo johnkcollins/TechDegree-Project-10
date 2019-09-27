@@ -45,9 +45,19 @@ export default class UpdateCourse extends Component {
         <div className="bounds course--detail">
           <h1>Update Course</h1>
           <div>
+            {errors
+                ?
+                <ul className="validation--errors--label">
+                  {
+                    errors
+                        ? errors.map(error => <li key={error}>{error}</li>)
+                        : ''
+                  }
+                </ul>
+                : ''
+            }
             <Form
                 cancel={this.cancel}
-                errors={errors}
                 submit={this.submit}
                 submitButtonText="Update Course"
                 elements={() => (
