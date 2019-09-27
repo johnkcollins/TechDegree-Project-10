@@ -4,14 +4,14 @@ import ReactMarkdown from 'react-markdown';
 
 export default class CourseDetail extends Component {
 
-
   state = {
     courses: null,
   };
 
-  async componentDidMount() {
-    await this.getCourses();
+  componentDidMount() {
+    this.getCourses();
   }
+
 
   render() {
     const {context} = this.props;
@@ -24,7 +24,7 @@ export default class CourseDetail extends Component {
       if (authenticatedUser.emailAddress === courseOwner) {
         updateAndDelete =
             <React.Fragment><Link className="button" to='' onClick={this.updateCourse}>Update Course</Link>
-              < Link className="button" onClick={this.deleteCourse} to=''>Delete
+              < Link className="button" onClick={this.deleteCourse} to='/courses/delete'>Delete
                 Course</Link></React.Fragment>
       }
     }
@@ -42,37 +42,37 @@ export default class CourseDetail extends Component {
             </div>
           </div>
           <div className="bounds course--detail">
-                  <div className="grid-66">
-                    <div className="course--header">
-                      <h4 className="course--label">Course</h4>
-                      <h3 className="course--title">{course ? course.title : ''}</h3>
-                      <p>By {course ? (`${course.firstName} ${course.lastName}`) : ''}</p>
-                    </div>
-                    <div className="course--description">
-                      {(course)
-                          ? <ReactMarkdown source={course.description}/>
-                          : ''
-                      }
-                    </div>
-                  </div>
-                  <div className="grid-25 grid-right">
-                    <div className="course--stats">
-                      <ul className="course--stats--list">
-                        <li className="course--stats--list--item">
-                          <h4>Estimated Time</h4>
-                          <h3>{course ? course.estimatedTime || 'TBD' : ''}</h3>
-                        </li>
-                        <li className="course--stats--list--item">
-                          <h4>Materials Needed</h4>
-                          {(course)
-                              ? <ReactMarkdown source={course.materialsNeeded}/>
-                              : ''
-                            }
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
+            <div className="grid-66">
+              <div className="course--header">
+                <h4 className="course--label">Course</h4>
+                <h3 className="course--title">{course ? course.title : ''}</h3>
+                <p>By {course ? (`${course.firstName} ${course.lastName}`) : ''}</p>
+              </div>
+              <div className="course--description">
+                {(course)
+                    ? <ReactMarkdown source={course.description}/>
+                    : ''
+                }
+              </div>
+            </div>
+            <div className="grid-25 grid-right">
+              <div className="course--stats">
+                <ul className="course--stats--list">
+                  <li className="course--stats--list--item">
+                    <h4>Estimated Time</h4>
+                    <h3>{course ? course.estimatedTime || 'TBD' : ''}</h3>
+                  </li>
+                  <li className="course--stats--list--item">
+                    <h4>Materials Needed</h4>
+                    {(course)
+                        ? <ReactMarkdown source={course.materialsNeeded}/>
+                        : ''
+                    }
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
     );
   }
@@ -107,7 +107,11 @@ export default class CourseDetail extends Component {
     const {authenticatedUser} = context;
     const {emailAddress} = authenticatedUser;
     const password = context.userPassword;
-    await context.data.deleteCourse(id, emailAddress, password)
-        .then(this.props.history.push('/courses'));
+    const response = await context.data.deleteCourse(id, emailAddress, password);
+    if (response.status === 204) {
+      this.props.history.push('/courses');
+    } else {
+      this.props.history.push('/error');
+    }
   }
 }
