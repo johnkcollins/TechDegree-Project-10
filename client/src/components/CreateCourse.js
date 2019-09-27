@@ -29,17 +29,14 @@ export default class Courses extends Component {
         <div className="bounds course--detail">
           <h1>Create Course</h1>
           <div>
-            {errors
-                ?
-                <ul className="validation--errors--label">
+            <ul className="validation--errors--label">
                   {
                     errors
                         ? errors.map(error => <li key={error}>{error}</li>)
                         : ''
                   }
-                </ul>
-                : ''
-            }
+            </ul>
+
             <Form
                 cancel={this.cancel}
                 submit={this.submit}
