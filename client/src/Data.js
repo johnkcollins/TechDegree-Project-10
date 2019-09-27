@@ -1,6 +1,8 @@
 import config from './config';
 
 export default class Data {
+
+  //Dynamically requests data from the API
   api(path, method = 'GET', body = null, requiresAuth = false, credentials = null) {
     const url = config.apiBaseUrl + path;
 
@@ -23,6 +25,7 @@ export default class Data {
     return fetch(url, options);
   }
 
+  //Returns user information from the API
   async getUser(emailAddress, password) {
     const response = await this.api(`/users`, 'GET', null, true, {credentials: {emailAddress, password}});
     if (response.status === 200) {
@@ -34,6 +37,7 @@ export default class Data {
     }
   }
 
+  //Creates a new user on the API
   async createUser(user) {
     const {emailAddress} = user;
     const {password} = user;
@@ -56,6 +60,7 @@ export default class Data {
     }
   }
 
+  //Creates a new course on the API
   async createCourse(course, {emailAddress, password, userId}) {
     const {title} = course;
     const {description} = course;
@@ -79,6 +84,7 @@ export default class Data {
     }
   }
 
+  //Updates the current course on the API
   async updateCourse(course, {emailAddress, password, userId}) {
     const {title} = course;
     const {description} = course;
@@ -110,6 +116,7 @@ export default class Data {
     }
   }
 
+  //Deletes the current course on the API
   async deleteCourse(id, emailAddress, password, context, data) {
     const response = await this.api(`/courses/${id}`, 'DELETE', null, true, {credentials: {emailAddress, password}});
     if (response.status === 204) {

@@ -61,6 +61,7 @@ export default class UserSignIn extends Component {
     );
   }
 
+  //Updates state to match the form content
   change = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -72,6 +73,7 @@ export default class UserSignIn extends Component {
     });
   };
 
+  //Submits the form content upon the submit button being clicked
   submit = () => {
     const {context} = this.props;
     const {emailAddress, password} = this.state;

@@ -129,6 +129,7 @@ export default class UpdateCourse extends Component {
     );
   }
 
+  //Updates state on form content change
   change = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -140,6 +141,7 @@ export default class UpdateCourse extends Component {
     });
   };
 
+  //Submits the form when the submit button is clicked
   submit = async () => {
     const {context} = this.props;
     const {authenticatedUser} = context;
@@ -166,6 +168,7 @@ export default class UpdateCourse extends Component {
       id
     };
 
+    //sends an API request when the submit button is clicked
     const response = await context.data.updateCourse(course, {emailAddress, password, userId});
     if (response !== undefined) {
       this.setState({
@@ -179,6 +182,7 @@ export default class UpdateCourse extends Component {
 
   };
 
+  //returns the user to the home page
   cancel = () => {
     this.props.history.push('/');
   };

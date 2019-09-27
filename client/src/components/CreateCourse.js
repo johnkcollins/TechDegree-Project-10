@@ -147,7 +147,7 @@ export default class Courses extends Component {
     };
 
     if (course.title.length > 0 && course.description.length > 0) {
-      const response = await context.data.createCourse(course, {emailAddress, password, userId});
+      await context.data.createCourse(course, {emailAddress, password, userId});
       this.props.history.push('/courses');
     } else {
       await this.setState({errors: ["Please verify a title and description have been entered"]})

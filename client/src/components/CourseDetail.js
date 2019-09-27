@@ -97,18 +97,17 @@ export default class CourseDetail extends Component {
     const {id} = this.props.match.params;
     const url = `/courses/${id}`;
     const course = this.state.courses;
-    const response = await context.data.api(url);
+    await context.data.api(url);
     this.props.history.push(`${url}/update`, course[0]);
   };
 
   deleteCourse = async () => {
-    const data = this.props.history;
     const {context} = this.props;
     const {id} = this.props.match.params;
     const {authenticatedUser} = context;
     const {emailAddress} = authenticatedUser;
     const password = context.userPassword;
-    const response = await context.data.deleteCourse(id, emailAddress, password)
+    await context.data.deleteCourse(id, emailAddress, password)
         .then(this.props.history.push('/courses'));
   }
 }

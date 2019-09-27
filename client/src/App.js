@@ -5,6 +5,8 @@ import {
   Switch
 } from 'react-router-dom';
 
+
+//Components
 import Header from './components/Header';
 import Courses from './components/Courses';
 import NotFound from './components/NotFound';
@@ -15,12 +17,14 @@ import Authenticated from './components/Authenticated';
 import CourseDetail from './components/CourseDetail';
 import CreateCourse from './components/CreateCourse';
 import Forbidden from "./components/Forbidden";
-
-import withContext from './Context';
-import PrivateRoute from './PrivateRoute';
 import UpdateCourse from "./components/UpdateCourse";
 
 
+//Higher order components
+import withContext from './Context';
+import PrivateRoute from './PrivateRoute';
+
+//Routes with Context added
 const HeaderWithContext = withContext(Header);
 const CoursesWithContext = withContext(Courses);
 const AuthWithContext = withContext(Authenticated);
@@ -32,6 +36,8 @@ const CreateCourseWithContext = withContext(CreateCourse);
 const UpdateCourseWithContext = withContext(UpdateCourse);
 const ForbiddenWithContext = withContext(Forbidden);
 
+
+//Route Handling
 export default () => (
     <Router>
       <div>
