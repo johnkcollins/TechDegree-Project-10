@@ -149,17 +149,12 @@ export default class Courses extends Component {
       errors
     };
 
-    const response = await context.data.createCourse(course, {emailAddress, password, userId});
-    if (response) {
-      response.then(data =>
-          this.setState({
-            errors: data
-          })
-      )
+    if (course.title.length > 0 && course.description.length > 0) {
+      const response = await context.data.createCourse(course, {emailAddress, password, userId});
+      this.props.history.push('/courses');
     } else {
-      this.props.history.push("/courses");
+      await this.setState({errors: ["Please verify a title and description have been entered"]})
     }
-
   };
 
   cancel = () => {
