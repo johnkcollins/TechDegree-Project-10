@@ -147,11 +147,9 @@ export default class Courses extends Component {
     };
 
     let response = await context.data.createCourse(course, {emailAddress, password, userId});
-    console.log(response);
     if (response.status === 201) {
       this.props.history.push('/courses');
     } else if (response.status === 400) {
-      console.log(response);
       response.json()
           .then(data =>
               Promise.resolve(this.setState({
