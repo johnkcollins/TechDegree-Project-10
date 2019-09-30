@@ -21,11 +21,13 @@ export default class CourseDetail extends Component {
     if (this.state.courses) {
       course = this.state.courses[0];
       let courseOwner = course.emailAddress;
-      if (authenticatedUser.emailAddress === courseOwner) {
-        updateAndDelete =
-            <React.Fragment><Link className="button" to='' onClick={this.updateCourse}>Update Course</Link>
-              < Link className="button" onClick={this.deleteCourse} to='/courses/delete'>Delete
-                Course</Link></React.Fragment>
+      if (authenticatedUser) {
+        if (authenticatedUser.emailAddress === courseOwner) {
+          updateAndDelete =
+              <React.Fragment><Link className="button" to='' onClick={this.updateCourse}>Update Course</Link>
+                < Link className="button" onClick={this.deleteCourse} to='/courses/delete'>Delete
+                  Course</Link></React.Fragment>
+        }
       }
     }
     return (
@@ -85,10 +87,8 @@ export default class CourseDetail extends Component {
       await response.json().then(data => this.setState({
         courses: data
       }));
-    } else if (response.status === 500) {
-      this.props.history.push('/error');
     } else {
-      throw new Error();
+      this.props.history.push('/error');
     }
   };
 
@@ -107,11 +107,16 @@ export default class CourseDetail extends Component {
     const {authenticatedUser} = context;
     const {emailAddress} = authenticatedUser;
     const password = context.userPassword;
-    const response = await context.data.deleteCourse(id, emailAddress, password);
-    if (response.status === 204) {
-      this.props.history.push('/courses');
-    } else {
-      this.props.history.push('/error');
+    try {
+      const response = await context.data.deleteCourse(id, emailAddress, password);
+      if (response.status === 204) {
+        this.props.history.push('/courses');
+      } else {
+        this.props.history.push('/notfound');
+      }
+    } catch (error) {
+      console.log(error);
+      this.props.history.push('/error')
     }
-  }
+  };
 }
