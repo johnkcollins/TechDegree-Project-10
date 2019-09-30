@@ -30,11 +30,11 @@ export default class Courses extends Component {
           <h1>Create Course</h1>
           <div>
             <ul className="validation--errors--label">
-                  {
-                    errors
-                        ? errors.map(error => <li key={error}>{error}</li>)
-                        : ''
-                  }
+              {
+                errors
+                    ? errors.map(error => <li key={error}>{error}</li>)
+                    : ''
+              }
             </ul>
 
             <Form
@@ -146,11 +146,17 @@ export default class Courses extends Component {
       errors
     };
 
-    if (course.title.length > 0 && course.description.length > 0) {
-      await context.data.createCourse(course, {emailAddress, password, userId});
+    let response = await context.data.createCourse(course, {emailAddress, password, userId});
+    console.log(response);
+    if (response.status === 201) {
       this.props.history.push('/courses');
-    } else {
-      await this.setState({errors: ["Please verify a title and description have been entered"]})
+    } else if (response.status === 400) {
+      console.log(response);
+      response.json()
+          .then(data =>
+              Promise.resolve(this.setState({
+                errors: data.errors
+              })));
     }
   };
 
