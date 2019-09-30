@@ -107,19 +107,24 @@ export default class UserSignUp extends Component {
       password,
     };
 
-    context.data.createUser(user)
-        .then(errors => {
-          if (errors.length > 0) {
-            this.setState({errors})
-          } else {
-            context.actions.signIn(emailAddress, password)
-                .then(this.props.history.push('/courses'))
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          this.props.history.push('/error');
-        });
+    try {
+      context.data.createUser(user)
+          .then(errors => {
+            if (errors.length > 0) {
+              this.setState({errors})
+            } else {
+              context.actions.signIn(emailAddress, password)
+                  .then(this.props.history.push('/courses'))
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.props.history.push('/error');
+          });
+    } catch (error) {
+      console.log(error);
+      this.props.history.push('/error')
+    }
   };
 
   cancel = () => {
