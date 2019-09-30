@@ -24,17 +24,12 @@ export default class UserSignUp extends Component {
         <div className="bounds">
           <div className="grid-33 centered signin">
             <h1>Sign Up</h1>
-            {errors
-                ?
                 <ul className="validation--errors--label">
-                  {
-                    errors
-                        ? errors.map(error => <li key={error}>{error}</li>)
-                        : ''
+                  {errors
+                      ? [errors.map(error => <li key={error}>{error}</li>)]
+                      : ""
                   }
                 </ul>
-                : ''
-            }
             <Form
                 cancel={this.cancel}
                 submit={this.submit}
@@ -90,7 +85,7 @@ export default class UserSignUp extends Component {
     });
   };
 
-  submit = () => {
+  submit = async () => {
     const {context} = this.props;
 
     const {
@@ -98,6 +93,7 @@ export default class UserSignUp extends Component {
       lastName,
       emailAddress,
       password,
+      errors
     } = this.state;
 
     const user = {
@@ -105,22 +101,27 @@ export default class UserSignUp extends Component {
       lastName,
       emailAddress,
       password,
+      errors
     };
 
+
     try {
-      context.data.createUser(user)
-          .then(errors => {
-            if (errors.length > 0) {
-              this.setState({errors})
-            } else {
-              context.actions.signIn(emailAddress, password)
-                  .then(this.props.history.push('/courses'))
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            this.props.history.push('/error');
-          });
+      let response = await context.data.createUser(user);
+      if (response.status === 400) {
+        await response.json()
+            .then(data =>
+                Promise.resolve(this.setState({
+                  errors: data.errors
+                })));
+        console.log(this.state.errors);
+      } else if (response.status === 201) {
+        await context.actions.signIn(emailAddress, password)
+            .then(this.props.history.push('/courses'))
+            .catch(err => {
+              console.log(err);
+              this.props.history.push('/error');
+            });
+      }
     } catch (error) {
       console.log(error);
       this.props.history.push('/error')
