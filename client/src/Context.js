@@ -46,7 +46,6 @@ export class Provider extends Component {
           userPassword: password,
         };
       });
-      //TODO: encrypt password before storing
       Cookies.set('authenticatedUser', JSON.stringify(user), {expires: 1});
       Cookies.set('userPassword', JSON.stringify(password), {expires: 1});
     }
