@@ -49,7 +49,7 @@ export default class UpdateCourse extends Component {
                 ?
                 <ul className="validation--errors--label">
                   {
-                    errors
+                    errors.length > 0
                         ? errors.map(error => <li key={error}>{error}</li>)
                         : ''
                   }
@@ -170,16 +170,13 @@ export default class UpdateCourse extends Component {
 
     //sends an API request when the submit button is clicked
     const response = await context.data.updateCourse(course, {emailAddress, password, userId});
-    if (response !== undefined) {
-      this.setState({
-        errors: [response]
-      });
-      console.log(this.state.errors)
-    } else {
-      console.log(this)
-      this.props.history.push('/courses');
+    if (response.status === 400) {
+      response.json()
+          .then(data =>
+              Promise.resolve(this.setState({
+                errors: data.errors
+              })));
     }
-
   };
 
   //returns the user to the home page
