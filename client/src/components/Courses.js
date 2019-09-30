@@ -47,15 +47,18 @@ export default class Courses extends Component {
 
   getCourses = async () => {
     const url = '/courses';
-    const response = await this.props.context.data.api(url);
-    if (response.status === 200) {
-      await response.json().then(data => this.setState({courses: data}));
-      console.log(response);
-      console.log(this.state.courses);
-    } else if (response.status === 500) {
-      this.props.history.push('/error');
-    } else {
-      throw new Error();
+    try {
+      const response = await this.props.context.data.api(url);
+      if (response.status === 200) {
+        await response.json().then(data => this.setState({courses: data}));
+      } else if (response.status === 500) {
+        this.props.history.push('/error');
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      console.log(error);
+      this.props.history.push('/error')
     }
   }
 }
