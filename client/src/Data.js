@@ -22,7 +22,6 @@ export default class Data {
       const encodedCredentials = btoa(`${credentials.credentials.emailAddress}:${credentials.credentials.password}`);
       options.headers['Authorization'] = `Basic ${encodedCredentials}`;
     }
-
     return fetch(url, options);
   }
 
@@ -51,13 +50,10 @@ export default class Data {
       lastName
     }, true, {credentials: {emailAddress, password}});
     if (response.status === 201) {
-      return [];
-    } else if (response.status === 400) {
-      return response.json().then(data => {
-        return data.errors;
-      });
+      console.log('User Created');
+      return response;
     } else {
-      throw new Error();
+      return response;
     }
   }
 
@@ -75,13 +71,10 @@ export default class Data {
       userId
     }, true, {credentials: {emailAddress, password}});
     if (response.status === 201) {
-      return console.log('Course created');
-    } else if (response.status === 400) {
-      return response.json().then(data => {
-        return data.errors;
-      });
+      console.log('Course created');
+      return response;
     } else {
-      throw new Error();
+      return response;
     }
   }
 
@@ -101,19 +94,11 @@ export default class Data {
       id
     }, true, {credentials: {emailAddress, password}});
     if (response.status === 204) {
-      console.log(this);
-      return console.log('Course updated');
-    } else if (response.status === 404) {
-      console.log(response);
-      return response.json().then(data => {
-        return data.errors;
-      });
-    } else if (response.status === 400) {
-      return response.json().then(data => {
-        return data.errors;
-      });
+      console.log('Course updated');
+      return response;
     } else {
-      throw new Error();
+      // response.json().then((data => console.log(data)));
+      return response;
     }
   }
 
@@ -123,17 +108,8 @@ export default class Data {
     if (response.status === 204) {
       console.log('Course Deleted');
       return response;
-    } else if (response.status === 403) {
-      return response.json().then(data => {
-        return data.errors;
-      });
-    } else if (response.status === 400) {
-      return response.json().then(data => {
-        return data.errors;
-      });
     } else {
-      throw new Error();
+      return response;
     }
   }
-
 }
