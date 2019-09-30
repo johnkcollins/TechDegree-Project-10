@@ -20,16 +20,23 @@ export default class UserSignUp extends Component {
       errors,
     } = this.state;
 
+    let errorObject;
+    console.log(errors.length);
+    if (this.state.errors.length <= 1) {
+      errorObject = errors
+    } else {
+      errorObject = errors.map(error => <li key={error}>{error}</li>)
+    }
+
     return (
         <div className="bounds">
           <div className="grid-33 centered signin">
             <h1>Sign Up</h1>
-                <ul className="validation--errors--label">
-                  {errors
-                      ? [errors.map(error => <li key={error}>{error}</li>)]
-                      : ""
-                  }
-                </ul>
+            <ul className="validation--errors--label">
+              {
+                errorObject
+              }
+            </ul>
             <Form
                 cancel={this.cancel}
                 submit={this.submit}
@@ -111,12 +118,12 @@ export default class UserSignUp extends Component {
         await response.json()
             .then(data =>
                 Promise.resolve(this.setState({
-                  errors: data.errors
+                  errors: [data.errors]
                 })));
-        console.log(this.state.errors);
+
       } else if (response.status === 201) {
         await context.actions.signIn(emailAddress, password)
-            .then(this.props.history.push('/courses'))
+            .then(this.props.history.push('/signin'))
             .catch(err => {
               console.log(err);
               this.props.history.push('/error');
